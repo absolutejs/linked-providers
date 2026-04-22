@@ -27,9 +27,18 @@
     "access": "public"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "release:package": "bun publish --access public"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.3",
+    "globals": "^17.4.0",
+    "prettier": "^3.5.3",
+    "typescript-eslint": "^8.56.1"
   }
 }
