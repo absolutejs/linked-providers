@@ -1,12 +1,16 @@
 {
   "name": "@absolutejs/linked-providers",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "license": "BSL-1.1",
   "description": "Shared linked-provider credential and resolver contracts for AbsoluteJS packages",
   "author": "Alex Kahn",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/absolutejs/linked-providers.git"
+  },
+  "homepage": "https://github.com/absolutejs/linked-providers",
+  "bugs": {
+    "url": "https://github.com/absolutejs/linked-providers/issues"
   },
   "type": "module",
   "sideEffects": false,
