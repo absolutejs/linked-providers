@@ -9,6 +9,26 @@ This package is intentionally narrow. It provides:
 - generic linked-provider resolver contracts
 - durable store contracts for grants and bindings
 
+## Installation
+
+```sh
+bun add @absolutejs/linked-providers
+```
+
+## Resolver contract
+
+```ts
+import type {
+	LinkedProviderCredentialResolver,
+	ResolveLinkedProviderCredentialInput
+} from '@absolutejs/linked-providers';
+
+export const resolveConnectorCredential = (
+	resolver: LinkedProviderCredentialResolver,
+	input: ResolveLinkedProviderCredentialInput
+) => resolver.resolveCredential(input);
+```
+
 It does not provide:
 
 - OAuth routes
