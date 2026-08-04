@@ -1,6 +1,6 @@
 {
   "name": "@absolutejs/linked-providers",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "BSL-1.1",
   "description": "Shared linked-provider credential and resolver contracts for AbsoluteJS packages",
   "author": "Alex Kahn",

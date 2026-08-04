@@ -58,7 +58,7 @@ export type LinkedProviderGrant = {
   expiresAt?: number;
   lastRefreshedAt?: number;
   lastRefreshError?: string;
-  metadata?: Record<string, unknown>;
+  metadata?: JsonObject;
   createdAt: number;
   updatedAt: number;
 };
@@ -75,7 +75,7 @@ export type LinkedProviderBinding = {
   status: LinkedProviderBindingStatus;
   availableScopes: string[];
   capabilities?: string[];
-  metadata?: Record<string, unknown>;
+  metadata?: JsonObject;
   createdAt: number;
   updatedAt: number;
 };
@@ -94,7 +94,7 @@ export type ResolvedLinkedProviderCredential = {
   label?: string;
   username?: string;
   email?: string;
-  metadata?: Record<string, unknown>;
+  metadata?: JsonObject;
 };
 
 export type LinkedProviderAccessTokenLease = {
@@ -108,7 +108,7 @@ export type LinkedProviderCredentialFailureReport = {
   code: LinkedProviderFailureCode;
   message?: string;
   retryAt?: number;
-  metadata?: Record<string, unknown>;
+  metadata?: JsonObject;
 };
 
 export type ResolveLinkedProviderCredentialInput = {
@@ -159,3 +159,6 @@ export type LinkedProviderCredentialResolver = {
     report: LinkedProviderCredentialFailureReport,
   ) => Promise<void> | void;
 };
+export type JsonPrimitive = boolean | null | number | string;
+export type JsonValue = JsonPrimitive | JsonObject | JsonValue[];
+export type JsonObject = { [key: string]: JsonValue };
