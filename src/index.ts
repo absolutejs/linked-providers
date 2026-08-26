@@ -33,6 +33,7 @@ export type LinkedProviderBindingStatus =
   | "restricted";
 
 export type LinkedProviderResolutionPurpose =
+  | "agent_action"
   | "interactive_test"
   | "background_sync"
   | "backfill";
