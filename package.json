@@ -41,11 +41,11 @@
     "format": "prettier --write .",
     "release": "bun run typecheck && bun run build && bun publish --access public",
     "check:package": "absolute-changelog check",
-    "prepublishOnly": "absolute-changelog check"
+    "prepublishOnly": "bun run check:package"
   },
   "devDependencies": {
     "@absolutejs/absolute": "^0.20.0-beta.0",
-    "@absolutejs/changelog": "^0.5.1",
+    "@absolutejs/changelog": "^0.6.0",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.0.3",
     "globals": "^17.4.0",
