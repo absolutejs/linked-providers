@@ -40,11 +40,12 @@
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "release": "bun run typecheck && bun run build && bun publish --access public",
-    "check:package": "absolute-changelog check"
+    "check:package": "absolute-changelog check",
+    "prepublishOnly": "absolute-changelog check"
   },
   "devDependencies": {
     "@absolutejs/absolute": "^0.20.0-beta.0",
-    "@absolutejs/changelog": "^0.1.2",
+    "@absolutejs/changelog": "^0.2.0",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.0.3",
     "globals": "^17.4.0",
