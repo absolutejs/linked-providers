@@ -25,8 +25,10 @@
     }
   },
   "files": [
-    "dist",
-    "README.md"
+    "CHANGELOG.md",
+    "README.md",
+    "changelog.json",
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
@@ -37,15 +39,17 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
-    "release": "bun run typecheck && bun run build && bun publish --access public"
+    "release": "bun run typecheck && bun run build && bun publish --access public",
+    "check:package": "absolute-changelog check"
   },
   "devDependencies": {
-    "@absolutejs/absolute": "^0.19.0-beta.1051",
-    "typescript": "^5.9.3",
+    "@absolutejs/absolute": "^0.20.0-beta.0",
+    "@absolutejs/changelog": "^0.1.2",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.0.3",
     "globals": "^17.4.0",
     "prettier": "^3.5.3",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1"
   }
 }
