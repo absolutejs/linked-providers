@@ -1,5 +1,16 @@
 {
 	"contract": 1,
 	"name": "@absolutejs/linked-providers",
-	"releases": []
+	"releases": [
+		{
+			"changes": [
+				{
+					"kind": "added",
+					"summary": "createEncryptedLinkedProviderGrantStore wraps a grant store so access and refresh tokens are encrypted with AES-GCM at rest. Each ciphertext is bound to its grant, owner, provider and field. Saves always encrypt; reading older plaintext grants must be turned on explicitly with allowLegacyReads during a migration. The caller supplies and manages the key."
+				}
+			],
+			"date": "2026-10-02",
+			"version": "0.0.8"
+		}
+	]
 }

@@ -163,3 +163,85 @@ export type LinkedProviderCredentialResolver = {
 export type JsonPrimitive = boolean | null | number | string;
 export type JsonValue = JsonPrimitive | JsonObject | JsonValue[];
 export type JsonObject = { [key: string]: JsonValue };
+
+/** Encryption at the persistence boundary. Callers continue to pass plaintext leases.
+ * AAD binds ciphertext to grant + token field, preventing cross-account substitution.
+ * Legacy reads must be explicitly enabled during a controlled migration.
+ */
+export const createEncryptedLinkedProviderGrantStore = (options: {
+  store: LinkedProviderGrantStore;
+  key: CryptoKey;
+  allowLegacyReads?: boolean;
+}): LinkedProviderGrantStore => {
+  const prefix = "lp:v1:";
+  const encoder = new TextEncoder();
+  const encode = (bytes: Uint8Array) =>
+    btoa(Array.from(bytes, (byte) => String.fromCharCode(byte)).join(""));
+  const decode = (value: string) =>
+    Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
+  const field = async (
+    grant: LinkedProviderGrant,
+    name: "accessTokenCiphertext" | "refreshTokenCiphertext",
+    encrypt: boolean,
+  ) => {
+    const value = grant[name];
+    if (value === undefined) return undefined;
+    const additionalData = encoder.encode(
+      JSON.stringify([grant.id, grant.ownerRef, grant.authProviderKey, name]),
+    );
+    if (encrypt) {
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const ciphertext = await crypto.subtle.encrypt(
+        { name: "AES-GCM", iv, additionalData },
+        options.key,
+        encoder.encode(value),
+      );
+      return prefix + encode(iv) + ":" + encode(new Uint8Array(ciphertext));
+    }
+    if (!value.startsWith(prefix)) {
+      if (options.allowLegacyReads) return value;
+      throw new Error(
+        "Unencrypted linked-provider token; migrate stored grants before enabling encrypted reads",
+      );
+    }
+    const [iv, ciphertext, extra] = value.slice(prefix.length).split(":");
+    if (!iv || !ciphertext || extra !== undefined)
+      throw new Error("Invalid encrypted linked-provider token");
+    return new TextDecoder().decode(
+      await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: decode(iv), additionalData },
+        options.key,
+        decode(ciphertext),
+      ),
+    );
+  };
+  const transform = async (
+    grant: LinkedProviderGrant,
+    encrypt: boolean,
+  ): Promise<LinkedProviderGrant> => ({
+    ...grant,
+    accessTokenCiphertext: await field(grant, "accessTokenCiphertext", encrypt),
+    refreshTokenCiphertext: await field(
+      grant,
+      "refreshTokenCiphertext",
+      encrypt,
+    ),
+  });
+  return {
+    ...options.store,
+    async getGrant(id) {
+      const grant = await options.store.getGrant(id);
+      return grant ? transform(grant, false) : undefined;
+    },
+    async listGrantsByOwner(owner) {
+      return Promise.all(
+        (await options.store.listGrantsByOwner(owner)).map((grant) =>
+          transform(grant, false),
+        ),
+      );
+    },
+    async saveGrant(grant) {
+      await options.store.saveGrant(await transform(grant, true));
+    },
+  };
+};
